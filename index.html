@@ -3,229 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Database Teman</title>
+    <title>Database Teman - Kelola Circle Lo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="landing.css">
 </head>
 <body>
 
-    <input type="radio" name="nav" id="dashboard" checked>
-    <input type="radio" name="nav" id="sifat">
-    <input type="radio" name="nav" id="kategori">
-    <input type="radio" name="nav" id="teman">
-    <input type="radio" name="nav" id="tugas">
+    <nav class="navbar">
+        <a href="#" class="logo-text">DB TEMAN</a>
+        <a href="app.html" class="btn-utama" style="padding: 10px 24px;">Login App</a>
+    </nav>
 
-    <div id="layar-masuk">
-        <div class="box-login">
-            <h2>Login Database</h2>
-            <form id="form-login">
-                <label>Nama Pengguna:</label>
-                <input type="text" id="nama-kamu" placeholder="Tulis nama kamu..." required>
-                <button type="submit">Masuk ke Dashboard</button>
-            </form>
+    <header class="hero">
+        <h1 class="reveal">Kelola Data Circle Pertemanan Lo Tanpa Pusing</h1>
+        <p class="reveal">Simpan kontak, catat tipe kepribadian, sampai bikin jadwal nongkrong di satu tempat biar silaturahmi jalan terus dan wacana beneran kejadian.</p>
+        <div class="reveal">
+            <a href="app.html" class="btn-utama">Masuk ke Dashboard</a>
         </div>
-    </div>
+    </header>
 
-    <div id="layar-app" style="display: none;">
-        
-        <aside id="menu-kiri">
-            <div class="logo">DB TEMAN</div>
-            <ul>
-                <li><label for="dashboard">Dashboard</label></li>
-                <li><label for="sifat">Tipe Kepribadian</label></li>
-                <li><label for="kategori">Daftar Kategori</label></li>
-                <li><label for="teman">Data Teman</label></li>
-                <li><label for="tugas">Tugas Kategori</label></li>
-            </ul>
-        </aside>
+    <section class="fitur-container">
+        <div class="fitur-card reveal">
+            <div class="ikon-fitur">🗂️</div>
+            <h3>Simpan Kontak</h3>
+            <p>Catat nomor WA, tanggal lahir, dan info penting temen lo biar gampang dicari pas lagi butuh.</p>
+        </div>
+        <div class="fitur-card reveal">
+            <div class="ikon-fitur">🧠</div>
+            <h3>Pahami Karakter</h3>
+            <p>Kelompokin temen berdasarkan sifatnya. Biar lo tau cara ngadepin dan komunikasi yang pas sama mereka.</p>
+        </div>
+        <div class="fitur-card reveal">
+            <div class="ikon-fitur">✅</div>
+            <h3>Jadwal & Tugas</h3>
+            <p>Bikin pengingat buat nugas bareng atau rencana nongkrong biar nggak ada lagi agenda yang kelewat.</p>
+        </div>
+    </section>
 
-        <div id="area-utama">
-            
-            <header class="topbar">
-                <h2 id="teks-sapaan">Halo!</h2>
-                <span id="hari-ini"></span>
-                <span id="waktu-sekarang"></span>
-            </header>
-
-            <div class="konten-pembungkus">
-
-                <div class="halaman-box" id="hal-dashboard">
-                    <div class="flex-stat">
-                        <div class="kartu-angka">
-                            <span class="label-kecil">Total Teman</span>
-                            <div class="angka-gede" id="total-teman"></div>
-                        </div>
-                        <div class="kartu-angka">
-                            <span class="label-kecil">Tren Hubungan</span>
-                            <div class="status-badge status-aman">Stabil</div>
-                        </div>
-                        <div class="kartu-angka">
-                            <span class="label-kecil">Tugas Tertunda</span>
-                            <div class="angka-gede">1</div>
-                        </div>
-                    </div>
-
-                    <div class="layout-grid">
-                        <div class="grid-kiri">
-                            <div class="papan">
-                                <h3>Daftar Kontak Prioritas</h3>
-                                <div class="list-data">
-                                    <div class="list-item">
-                                        <strong>Rizky</strong> (Laki-laki)<br>
-                                        Kategori: Sekolah | Sifat: Ambisius
-                                    </div>
-                                    <div class="list-item">
-                                        <strong>Siti</strong> (Perempuan)<br>
-                                        Kategori: Rombel | Sifat: Humoris
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="grid-kanan">
-                            <div class="papan">
-                                <h3>Pengingat Tugas</h3>
-                                <div class="list-data">
-                                    <div class="list-item">
-                                        <span class="tag-merah">Mendesak</span><br>
-                                        <strong>Kerja Kelompok Web</strong><br>
-                                        Deadline: 28 Maret 2026
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="halaman-box" id="hal-sifat">
-                    <div class="papan">
-                        <h3>Tambah Tipe Sifat</h3>
-                        <form action="#">
-                            <label>Nama Sifat:</label>
-                            <input type="text" placeholder="Contoh: Humoris, Pendiam" required id="nama-sifat">
-                            
-                            <label>Deskripsi Singkat:</label>
-                            <textarea placeholder="Penjelasan sifatnya..." id="desc-sifat"></textarea>
-                            
-                            <label>Warna Label:</label>
-                            <input type="color" id="warna-sifat">
-                            
-                            <button type="button" onclick="ambilSifat()">Simpan Sifat</button>
-                        </form>
-                    </div>
-
-                    <div class="papan">
-                        <h3>Daftar Sifat yang Terdaftar</h3>
-                        <div class="list-data" id="list-sifat">
-                            <!--Isinya list sidat yang diambil dari fungsi ambilSifat()-->
-                        </div>
-                    </div>
-                </div>
-
-                <div class="halaman-box" id="hal-kategori">
-                    <div class="papan">
-                        <h3>Tambah Kategori Baru</h3>
-                        <form action="#">
-                            <label>Nama Kategori:</label>
-                            <input type="text" id="kategori-relasi" placeholder="Contoh: Teman SMP, Keluarga" required>
-                            <label>Warna label:</label>
-                            <input type="color" id="warna-kategori">
-                            <button type="button" onclick="ambilKategori()">Simpan Kategori</button>
-                        </form>
-                    </div>
-
-                    <div class="papan">
-                        <h3>Daftar Kategori</h3>
-                        <div class="list-data" id="list-data">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="halaman-box" id="hal-teman">
-                    <h3>Registrasi Data Teman</h3>
-                    <button id="openModal">Open Modal</button>
-                        <div class="modal" id="modal">
-                            <div class="papan modal-create"> 
-                                <form action="#" autocomplete="off" id="formulir-crud-teman">
-                                    <label>Nama Lengkap:</label>
-                                    <input type="text" id="nama" placeholder="John Doe" required>
-
-                                    <label>No WhatsApp:</label>
-                                    <input type="text" id="nomorHp" placeholder="628xxxx">
-
-                                    <label>Jenis Kelamin:</label>
-                                    <select id="kelamin">
-                                        <option>Laki-laki</option>
-                                        <option>Perempuan</option>
-                                    </select>
-
-                                    <label>Kepribadian:</label>
-                                    <select>
-                                        <option>Penyayang</option>
-                                        <option>Ambis</option>
-                                    </select>
-
-                                    <label>Kategori Relasi:</label>
-                                    <select>
-                                        <option>Sekolah</option>
-                                        <option>Rombel</option>
-                                    </select>
-
-                                    <label>Tanggal Lahir:</label>
-                                    <input type="date" id="birth">
-
-                                    <div class="centang-favorit">
-                                        <input type="checkbox" id="fav-cek" style="width:auto; margin-right: 5px;">
-                                        <label for="fav-cek" style="display:inline;">Tandai sebagai Teman Favorit</label>
-                                    </div>
-
-                                    <button type="button" style="margin-top:15px;" id="submit closeModal" onclick="hasil()">Simpan Data Teman</button>
-                                </form>
-                                <button id="closeModal">Tutup</button>
-                            </div>
-                        </div>
-                        
-                    <div id="hasil"></div>
-                </div>
-
-                <div class="halaman-box" id="hal-tugas">
-                    <div class="papan">
-                        <h3>Buat Tugas Baru</h3>
-                        <form action="#">
-                            <label>Nama Kegiatan:</label>
-                            <input type="text" required>
-
-                            <label>Deskripsi:</label>
-                            <input type="text" placeholder="Opsional">
-
-                            <label>Orang yang terlibat:</label>
-                            <select name="" id="">
-                                <option value="">Endi</option>
-                                <option value="">Asep</option>
-                                <option value="">Rangga</option>
-                            </select>
-
-                            <label>Kategori Relasi:</label>
-                            <select>
-                                <option>Sekolah</option>
-                                <option>Rombel</option>
-                            </select>
-
-                            <label>Tenggat Waktu:</label>
-                            <input type="date" required>
-
-                            <button type="button">Buat Tugas</button>
-                        </form>
-                    </div>
-                </div>
-
+    <section class="cara-kerja">
+        <h2 class="section-title reveal">Cara Pakainya Gampang Banget</h2>
+        <div class="langkah-container">
+            <div class="langkah-box reveal">
+                <div class="angka-langkah">01</div>
+                <h4>Login Simpel</h4>
+                <p>Cukup masukin nama lo aja di halaman awal. Sistem bakal langsung ngenalin dan nyapa lo.</p>
             </div>
-
-            <footer class="kaki-web">
-                <p>&copy; 2026 Database Teman</p>
-            </footer>
-
+            <div class="langkah-box reveal">
+                <div class="angka-langkah">02</div>
+                <h4>Atur Kategori</h4>
+                <p>Bikin grup circle lo sendiri, terus atur tipe kepribadian dan kasih warna label biar rapi.</p>
+            </div>
+            <div class="langkah-box reveal">
+                <div class="angka-langkah">03</div>
+                <h4>Masukin Data</h4>
+                <p>Mulai catat data temen-temen lo. Asiknya, lo bisa langsung chat WA mereka dari web ini!</p>
+            </div>
         </div>
-    </div>
+    </section>
 
-    <script src="script.js"></script>
+    <section class="cta-bawah reveal">
+        <h2>Yuk, Mulai Rapihin Data Temen Lo!</h2>
+        <p>Nggak usah dihafal semua di kepala. Pake web ini aja biar urusan pertemanan lo makin asik dan teratur.</p>
+        <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+            <a href="app.html" class="btn-utama">Mulai Sekarang</a>
+        </div>
+    </section>
+
+    <footer class="kaki-web" style="position: relative; border-top: 1px solid #e5e7eb;">
+        <p>&copy; 2026 Database Teman</p>
+    </footer>
+
+    <script>
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                var elementVisible = 100;
+                if (elementTop < windowHeight - elementVisible) {
+                    reveals[i].classList.add("active");
+                }
+            }
+        }
+        window.addEventListener("scroll", reveal);
+        reveal();
+    </script>
 </body>
 </html>
