@@ -86,7 +86,7 @@ function renderTabelTeman() {
         </tr>`).join('');
 
     document.getElementById("hasil").innerHTML = `
-        <table border="1">
+        <table>
             <thead>
                 <tr>
                     <th>No</th>
@@ -240,7 +240,7 @@ function ambilKategori() {
 
 function renderListKategori() {
     const listHTML = dataKategori.map((item, index) => `
-        <div class="list-item" style="border-left: 5px solid ${item.warnaKategori}; display: flex; justify-content: space-between; align-items: center;">
+        <div class="list-item" style="border-left: 5px solid ${item.warnaKategori}; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
             <span>${item.namaKategori}</span>
             <button type="button" style="background:#ef4444; width: auto; padding: 6px 12px; font-size: 12px; border-radius: 6px; margin: 0;" onclick="hapusKategori(${index})">Hapus</button>
         </div>
@@ -343,10 +343,10 @@ function ambilSifat(){
 function renderListSifat() {
     const outputHtml = document.getElementById("list-sifat");
     const dataSifatOutput = dataSifat.map((item, index) => `
-    <div class="list-item" style="border-left: 5px solid ${item.warnaSifat}; display: flex; justify-content: space-between; align-items: center;">
+    <div class="list-item" style="border-left: 5px solid ${item.warnaSifat}; display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 10px;">
         <div>
             <strong>${item.namaSifat}</strong><br>
-            ${item.deskripsiSifat}
+            <span style="font-size:13px; color:#6b7280;">${item.deskripsiSifat}</span>
         </div>
         <button type="button" style="background:#ef4444; width: auto; padding: 6px 12px; font-size: 12px; border-radius: 6px; margin: 0;" onclick="hapusSifat(${index})">Hapus</button>
     </div>
@@ -376,9 +376,7 @@ function updateDropdownSifat() {
     }
 }
 
-/* =========================================
-   LOGIKA TUGAS DAN AGENDA (BARU)
-   ========================================= */
+/* LOGIKA TUGAS DAN AGENDA */
 
 function initModalTugas() {
     const openBtn = document.getElementById("openModalTugas");
@@ -448,7 +446,7 @@ function renderTugasHalaman() {
                         </em>
                     </div>
                 </div>
-                <button type="button" style="background:#ef4444; width: auto; padding: 8px 16px; font-size: 13px; border-radius: 6px; margin: 0;" onclick="hapusTugas(${index})">Tandai Selesai / Hapus</button>
+                <button type="button" style="background:#ef4444; width: auto; padding: 8px 16px; font-size: 13px; border-radius: 6px; margin: 0;" onclick="hapusTugas(${index})">Tandai Selesai</button>
             </div>
         </div>
     `).join('');
@@ -489,7 +487,35 @@ function hapusTugas(index) {
     }
 }
 
-// Render awal untuk memunculkan status kosong
+/* =========================================
+   LOGIKA HAMBURGER MENU (RESPONSIVE SIDEBAR)
+   ========================================= */
+const hamburgerBtn = document.getElementById('hamburger-menu');
+const menuKiri = document.getElementById('menu-kiri');
+const sidebarOverlay = document.getElementById('sidebar-overlay');
+
+if (hamburgerBtn && menuKiri && sidebarOverlay) {
+    function toggleSidebar() {
+        menuKiri.classList.toggle('open');
+        sidebarOverlay.classList.toggle('open');
+    }
+
+    hamburgerBtn.addEventListener('click', toggleSidebar);
+    sidebarOverlay.addEventListener('click', toggleSidebar);
+
+    // Tutup sidebar saat item menu diklik (khusus di HP)
+    const menuItems = document.querySelectorAll('#menu-kiri ul li label');
+    menuItems.forEach(item => {
+        item.addEventListener('click', () => {
+            if (window.innerWidth <= 768) {
+                menuKiri.classList.remove('open');
+                sidebarOverlay.classList.remove('open');
+            }
+        });
+    });
+}
+
+// Render awal
 renderPrioritas();
 renderTugasHalaman();
 renderTugasDashboard();
