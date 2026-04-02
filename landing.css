@@ -9,6 +9,7 @@
     position: sticky;
     top: 0;
     z-index: 100;
+    flex-wrap: wrap;
 }
 .navbar .logo-text {
     color: #111827;
@@ -16,6 +17,14 @@
     font-weight: 700;
     letter-spacing: 1.5px;
     text-decoration: none;
+}
+.hamburger-landing {
+    display: none;
+    background: transparent;
+    border: none;
+    color: #111827;
+    cursor: pointer;
+    padding: 5px;
 }
 .hero {
     text-align: center;
@@ -174,10 +183,38 @@
     transform: translateY(0);
 }
 
-/* Mobile */
+/* Mobile Responsiveness */
 @media (max-width: 768px) {
+    .hamburger-landing { display: block; }
+    
+    .nav-links { 
+        display: none; 
+        width: 100%; 
+        text-align: center; 
+        margin-top: 20px;
+        padding-bottom: 10px;
+    }
+    
+    .nav-links.open {
+        display: block;
+    }
+
+    .nav-links .btn-utama {
+        display: block;
+        width: 100%;
+    }
+
+    .hero { padding: 80px 20px; }
     .hero h1 { font-size: 32px; }
     .hero p { font-size: 16px; }
-    .langkah-container { gap: 20px; }
+
+    .fitur-container { padding: 40px 5%; }
+    .langkah-container { gap: 30px; margin-top: 30px; }
+
+    .cta-bawah { 
+        padding: 60px 20px; 
+        border-radius: 0; 
+        margin: 0; 
+    }
     .cta-bawah h2 { font-size: 28px; }
 }
