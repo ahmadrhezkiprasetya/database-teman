@@ -239,12 +239,22 @@ function ambilKategori() {
 }
 
 function renderListKategori() {
-    const listHTML = dataKategori.map((item) => `
-        <div class="list-item" style="border-left: 5px solid ${item.warnaKategori};">
-            ${item.namaKategori}
+    const listHTML = dataKategori.map((item, index) => `
+        <div class="list-item" style="border-left: 5px solid ${item.warnaKategori}; display: flex; justify-content: space-between; align-items: center;">
+            <span>${item.namaKategori}</span>
+            <button type="button" style="background:#ef4444; width: auto; padding: 6px 12px; font-size: 12px; border-radius: 6px; margin: 0;" onclick="hapusKategori(${index})">Hapus</button>
         </div>
     `).join('');
     document.getElementById("list-data").innerHTML = listHTML;
+}
+
+function hapusKategori(index) {
+    const konfirmasi = confirm("Apakah Anda yakin ingin menghapus kategori ini?");
+    if (konfirmasi) {
+        dataKategori.splice(index, 1);
+        renderListKategori();
+        updateDropdownKategori();
+    }
 }
 
 function updateDropdownKategori() {
@@ -301,10 +311,9 @@ function bukaWA(nomor) {
 
 /* Logika CRUD sifat */
 function ambilSifat(){
-    const sifat = document.getElementById("nama-sifat").value.trim()
+    const sifat = document.getElementById("nama-sifat").value.trim();
     const deskripsi = document.getElementById("desc-sifat").value;
     const warna = document.getElementById("warna-sifat").value;
-    let outputHtml = document.getElementById("list-sifat")
 
     if (sifat === "") {
         alert("Nama sifat tidak boleh kosong!");
@@ -321,21 +330,37 @@ function ambilSifat(){
         namaSifat: sifat,
         deskripsiSifat: deskripsi,
         warnaSifat: warna
-    })
+    });
 
-    const dataSifatOutput = dataSifat.map((item) => `
-    <div class="list-item" style="border-left: 5px solid ${item.warnaSifat};">
-        <strong>${item.namaSifat}</strong><br>
-        ${item.deskripsiSifat}
-    </div>
-    `).join('')
-    outputHtml.innerHTML = dataSifatOutput;
-
+    renderListSifat();
     updateDropdownSifat();
     alert(`Sifat '${sifat}' berhasil ditambahkan!`);
     
     document.getElementById("nama-sifat").value = "";
     document.getElementById("desc-sifat").value = "";
+}
+
+function renderListSifat() {
+    const outputHtml = document.getElementById("list-sifat");
+    const dataSifatOutput = dataSifat.map((item, index) => `
+    <div class="list-item" style="border-left: 5px solid ${item.warnaSifat}; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <strong>${item.namaSifat}</strong><br>
+            ${item.deskripsiSifat}
+        </div>
+        <button type="button" style="background:#ef4444; width: auto; padding: 6px 12px; font-size: 12px; border-radius: 6px; margin: 0;" onclick="hapusSifat(${index})">Hapus</button>
+    </div>
+    `).join('');
+    outputHtml.innerHTML = dataSifatOutput;
+}
+
+function hapusSifat(index) {
+    const konfirmasi = confirm("Apakah Anda yakin ingin menghapus sifat ini?");
+    if (konfirmasi) {
+        dataSifat.splice(index, 1);
+        renderListSifat();
+        updateDropdownSifat();
+    }
 }
 
 function updateDropdownSifat() {
