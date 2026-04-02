@@ -4,12 +4,6 @@ const teksSapaan = document.getElementById('teks-sapaan');
 const layarMasuk = document.getElementById('layar-masuk');
 const layarApp = document.getElementById('layar-app');
 
-// window.onload = function() {
-//     const hari = new Date();
-//     const formatnya = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-//     document.getElementById('hari-ini').innerText = hari.toLocaleDateString('id-ID', formatnya);
-// }
-
 formLogin.addEventListener('submit', function(e) {
     e.preventDefault();
     
@@ -49,7 +43,6 @@ function logikaTanggal(){
     document.getElementById("hari-ini").innerHTML = show;
 }
 logikaTanggal()
-/* Logika Tanggal */
 
 /* Logika Jam */
 function logikaJam(){
@@ -58,66 +51,40 @@ function logikaJam(){
     let menit = time.getMinutes();
     let detik = time.getSeconds();
 
-    // Format agar selalu dua digit
     jam = (jam < 10) ? "0" + jam : jam;
     menit = (menit < 10) ? "0" + menit : menit;
     detik = (detik < 10) ? "0" + detik : detik;
 
     let tampilan = `${jam}:${menit}:${detik}`;
     
-    // Pilih salah satu saja, .textContent lebih disarankan untuk performa
     document.getElementById("waktu-sekarang").textContent = tampilan;
 }
 setInterval(logikaJam, 1000);
-logikaJam(); // Panggilan pertama agar tidak menunggu 1 detik
-/* Logika Jam */
+logikaJam(); 
 
 /* Database */
 let data = [];
 let dataKategori = [];
 let dataSifat = [];
-/* Database */
+let editIndex = -1; 
 
-/* Logika CRUD */
-function hasil(){
-    const modalElement = document.getElementById("modal");
-    const nama = document.getElementById("nama").value;
-    const nomorHp = document.getElementById("nomorHp").value || 0;
-    const gender = document.getElementById("kelamin").value || "Tidak terdefinisi";
-    const lahir = document.getElementById("birth").value;
-
-    if (nama === "" && nomorHp === 0){
-        alert("Form harus diisi untuk menyimpan!");
-        return;
-    }
-
-    data.push({
-        nama: nama,
-        hp: nomorHp,
-        gender: gender,
-        tanggalLahir: lahir
-    })
-
-    // const jumlahTeman = data.length
-    // document.getElementById("total").innerHTML = `Total teman anda saat ini ${jumlahTeman}`;
-
+/* Logika Merender Tabel Teman */
+function renderTabelTeman() {
     const tableRows = data.map((item, index) => `
         <tr>
             <td>${index + 1}</td>
             <td>${item.nama}</td>
-            <td>${item.hp} <button type="button"  onclick="bukaWA('${item.hp}')">Kontak</button></td>
+            <td>${item.hp} <button type="button" onclick="bukaWA('${item.hp}')">Kontak</button></td>
             <td>${item.gender}</td>
             <td>${item.tanggalLahir}</td>
+            <td>${item.kategori}</td>
+            <td>
+                <button type="button" style="background:#f59e0b;" onclick="editData(${index})">Edit</button>
+                <button type="button" style="background:#ef4444;" onclick="hapusData(${index})">Hapus</button>
+            </td>
         </tr>`).join('');
 
-    // 3. Otomatis Tutup Modal
-    modalElement.classList.remove("open");
-
-    // 4. Berikan Notifikasi (Gunakan alert sederhana atau SweetAlert)
-    alert("Berhasil! Data " + nama + " telah tersimpan ke database.");
-
     document.getElementById("hasil").innerHTML = `
-
         <table border="1">
             <thead>
                 <tr>
@@ -126,48 +93,131 @@ function hasil(){
                     <th>HP</th>
                     <th>Gender</th>
                     <th>Tgl Lahir</th>
+                    <th>Kategori</th>
+                    <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>${tableRows}</tbody>
         </table>
-`;
+    `;
+    
+    document.getElementById("total-teman").textContent = data.length;
+}
+
+/* Logika Menyimpan (Create & Update) Data Teman */
+function hasil(){
+    const modalElement = document.getElementById("modal");
+    const nama = document.getElementById("nama").value;
+    const nomorHp = document.getElementById("nomorHp").value || 0;
+    const gender = document.getElementById("kelamin").value || "Tidak terdefinisi";
+    const lahir = document.getElementById("birth").value;
+    const kategori = document.getElementById("pilih-kategori-teman").value;
+
+    if (nama === "" || nomorHp === "" || nomorHp === 0){
+        alert("Nama dan No HP harus diisi!");
+        return;
+    }
+
+    const newData = {
+        nama: nama,
+        hp: nomorHp,
+        gender: gender,
+        tanggalLahir: lahir,
+        kategori: kategori 
+    };
+
+    if (editIndex === -1) {
+        data.push(newData);
+        alert("Berhasil! Data " + nama + " telah tersimpan.");
+    } else {
+        data[editIndex] = newData;
+        alert("Berhasil! Data " + nama + " telah diperbarui.");
+        editIndex = -1; 
+    }
+
+    modalElement.classList.remove("open");
+    renderTabelTeman();
     document.getElementById("formulir-crud-teman").reset();
 }
-/* Logika CRUD */
+
+/* Logika Edit Data Teman */
+function editData(index) {
+    const item = data[index];
+    document.getElementById("nama").value = item.nama;
+    document.getElementById("nomorHp").value = item.hp;
+    document.getElementById("kelamin").value = item.gender;
+    document.getElementById("birth").value = item.tanggalLahir;
+    document.getElementById("pilih-kategori-teman").value = item.kategori;
+
+    editIndex = index;
+    document.getElementById("modal").classList.add("open");
+}
+
+/* Logika Hapus Data Teman */
+function hapusData(index) {
+    const konfirmasi = confirm("Apakah Anda yakin ingin menghapus teman ini?");
+    if (konfirmasi) {
+        data.splice(index, 1); 
+        renderTabelTeman();    
+    }
+}
 
 /* Logika CRUD Kategori */
 function ambilKategori() {
-    const kategori = document.getElementById("kategori-relasi").value.trim();
+    const inputKategori = document.getElementById("kategori-relasi");
+    const kategori = inputKategori.value.trim();
     const warna = document.getElementById("warna-kategori").value;
 
-    let checkDouble = dataKategori.some(item => item.namaKategori.toLowerCase() === kategori.toLowerCase())
+    if (kategori === "") {
+        alert("Nama kategori tidak boleh kosong!");
+        return;
+    }
+
+    let checkDouble = dataKategori.some(item => item.namaKategori.toLowerCase() === kategori.toLowerCase());
 
     if (checkDouble){
         alert("Kategori '" + kategori + "' sudah ada!");
         return;
     }
-    // 1. Simpan ke Array
+    
     dataKategori.push({
         namaKategori: kategori,
         warnaKategori: warna
     });
 
-    // 2. Map data menjadi HTML (agar semua kategori muncul, bukan cuma yang terakhir)
+    // Update List Tampilan di halaman Kategori
+    renderListKategori();
+    
+    // Update Dropdown di form teman & tugas
+    updateDropdownKategori();
+
+    inputKategori.value = "";
+}
+
+function renderListKategori() {
     const listHTML = dataKategori.map((item) => `
         <div class="list-item" style="border-left: 5px solid ${item.warnaKategori};">
             ${item.namaKategori}
         </div>
     `).join('');
-
-    // 3. Render ke Class .list-data
-    const container = document.getElementById("list-data");
-    if (container) {
-        container.innerHTML = listHTML;
-    }
-
+    document.getElementById("list-data").innerHTML = listHTML;
 }
 
-/* Logika CRUD Kategori */
+function updateDropdownKategori() {
+    const dropdowns = ["pilih-kategori-teman", "tugas-kategori"];
+    dropdowns.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.innerHTML = '<option value="">-- Pilih Kategori --</option>';
+            dataKategori.forEach(kat => {
+                const opt = document.createElement("option");
+                opt.value = kat.namaKategori;
+                opt.textContent = kat.namaKategori;
+                el.appendChild(opt);
+            });
+        }
+    });
+}
 
 /* Logika Modal */
 function modal(){
@@ -176,6 +226,8 @@ function modal(){
     const modal = document.getElementById("modal");
 
     openBtn.addEventListener("click", () => {
+        document.getElementById("formulir-crud-teman").reset();
+        editIndex = -1; 
         modal.classList.add("open");
     });
 
@@ -184,10 +236,9 @@ function modal(){
     });
 }
 modal()
-/* Logika Modal */
 
 /* Logika buka whatsapp */
-function bukaWA(nomor) { // Terima parameter nomor di sini
+function bukaWA(nomor) {
     let jamSekarang = new Date().getHours();
     let waktu = "Pagi";
 
@@ -199,22 +250,10 @@ function bukaWA(nomor) { // Terima parameter nomor di sini
         waktu = "Malam";
     }
 
-    // Menggunakan template literal untuk pesan yang lebih rapi
-    let pesan = `Halo, Selamat ${waktu}! Saya tertarik dengan mobil Anda.`;
-    let direct = `https://wa.me/${nomor}?text=${encodeURIComponent(pesan)}`; //encodeURIComponent() => untuk memberi spasi khusus pada url ke string yang ada
-
+    let pesan = `Halo, Selamat ${waktu}!`;
+    let direct = `https://wa.me/${nomor}?text=${encodeURIComponent(pesan)}`;
     window.open(direct, '_blank');
 }   
-/* Logika buka whatsapp */
-
-/* Logika hitung teman */
-function totalTeman(){
-    let jumlah = data.length
-    document.getElementById("total-teman").textContent = jumlah;
-}
-setInterval(totalTeman, 1000)
-totalTeman()
-/* Logika hitung teman */
 
 /* Logika CRUD sifat */
 function ambilSifat(){
@@ -223,12 +262,15 @@ function ambilSifat(){
     const warna = document.getElementById("warna-sifat").value;
     let outputHtml = document.getElementById("list-sifat")
 
+    if (sifat === "") {
+        alert("Nama sifat tidak boleh kosong!");
+        return;
+    }
+
     const checkDouble = dataSifat.some(item => item.namaSifat.toLowerCase() === sifat.toLowerCase())
     if (checkDouble){
         alert(`Sifat '${sifat}' sudah terdaftar disistem!`)
         return
-    } else {
-        alert(`Sifat '${sifat}' berhasil ditambahkan!`)
     }
 
     dataSifat.push({
@@ -237,14 +279,32 @@ function ambilSifat(){
         warnaSifat: warna
     })
 
+    // Render List di halaman Sifat
     const dataSifatOutput = dataSifat.map((item) => `
     <div class="list-item" style="border-left: 5px solid ${item.warnaSifat};">
         <strong>${item.namaSifat}</strong><br>
         ${item.deskripsiSifat}
     </div>
     `).join('')
-
     outputHtml.innerHTML = dataSifatOutput;
 
+    // Update Dropdown Sifat di Form Teman
+    updateDropdownSifat();
+    alert(`Sifat '${sifat}' berhasil ditambahkan!`);
+    
+    document.getElementById("nama-sifat").value = "";
+    document.getElementById("desc-sifat").value = "";
 }
-/* Logika CRUD sifat*/
+
+function updateDropdownSifat() {
+    const el = document.getElementById("pilih-sifat-teman");
+    if (el) {
+        el.innerHTML = '<option value="">-- Pilih Sifat --</option>';
+        dataSifat.forEach(s => {
+            const opt = document.createElement("option");
+            opt.value = s.namaSifat;
+            opt.textContent = s.namaSifat;
+            el.appendChild(opt);
+        });
+    }
+}
