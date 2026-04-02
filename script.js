@@ -62,10 +62,11 @@ function logikaJam(){
 setInterval(logikaJam, 1000);
 logikaJam(); 
 
-/* Database */
+/* Array Data Master */
 let data = [];
 let dataKategori = [];
 let dataSifat = [];
+let dataTugas = [];
 let editIndex = -1; 
 
 /* Logika Merender Tabel Teman */
@@ -73,11 +74,11 @@ function renderTabelTeman() {
     const tableRows = data.map((item, index) => `
         <tr>
             <td>${index + 1}</td>
-            <td>${item.nama}</td>
+            <td>${item.nama} ${item.favorit ? "⭐" : ""}</td>
             <td>${item.hp} <button type="button" onclick="bukaWA('${item.hp}')">Kontak</button></td>
             <td>${item.gender}</td>
             <td>${item.tanggalLahir}</td>
-            <td>${item.kategori}</td>
+            <td>${item.sifat || "-"}</td> <td>${item.kategori || "-"}</td>
             <td>
                 <button type="button" style="background:#f59e0b;" onclick="editData(${index})">Edit</button>
                 <button type="button" style="background:#ef4444;" onclick="hapusData(${index})">Hapus</button>
@@ -93,7 +94,7 @@ function renderTabelTeman() {
                     <th>HP</th>
                     <th>Gender</th>
                     <th>Tgl Lahir</th>
-                    <th>Kategori</th>
+                    <th>Kepribadian</th> <th>Kategori</th>
                     <th>Aksi</th>
                 </tr>
             </thead>
@@ -104,6 +105,42 @@ function renderTabelTeman() {
     document.getElementById("total-teman").textContent = data.length;
 }
 
+/* Logika Merender Kontak Prioritas di Dashboard */
+function renderPrioritas() {
+    const listPrioritas = document.getElementById("list-prioritas");
+    const favoritData = data.filter(item => item.favorit === true);
+    
+    if (favoritData.length === 0) {
+        listPrioritas.innerHTML = '<div style="text-align: center; padding: 20px; color: #6b7280; font-size: 14px;">Belum ada kontak prioritas yang ditandai.</div>';
+        return;
+    }
+    
+    const listHTML = favoritData.map(item => `
+        <div class="list-item">
+            <div class="item-header">
+                <strong>${item.nama}</strong> <span>(${item.gender})</span>
+            </div>
+            <div class="item-body">Kategori: ${item.kategori || '-'} | Sifat: ${item.sifat || '-'}</div>
+        </div>
+    `).join('');
+    
+    listPrioritas.innerHTML = listHTML;
+}
+
+/* Logika Mengupdate Dropdown Teman (Orang yg Terlibat) */
+function updateDropdownTeman() {
+    const el = document.getElementById("tugas-orang");
+    if (el) {
+        el.innerHTML = '<option value="">-- Pilih Orang --</option>';
+        data.forEach(t => {
+            const opt = document.createElement("option");
+            opt.value = t.nama;
+            opt.textContent = t.nama;
+            el.appendChild(opt);
+        });
+    }
+}
+
 /* Logika Menyimpan (Create & Update) Data Teman */
 function hasil(){
     const modalElement = document.getElementById("modal");
@@ -111,7 +148,9 @@ function hasil(){
     const nomorHp = document.getElementById("nomorHp").value || 0;
     const gender = document.getElementById("kelamin").value || "Tidak terdefinisi";
     const lahir = document.getElementById("birth").value;
+    const sifat = document.getElementById("pilih-sifat-teman").value;
     const kategori = document.getElementById("pilih-kategori-teman").value;
+    const isFavorit = document.getElementById("fav-cek").checked;
 
     if (nama === "" || nomorHp === "" || nomorHp === 0){
         alert("Nama dan No HP harus diisi!");
@@ -123,7 +162,9 @@ function hasil(){
         hp: nomorHp,
         gender: gender,
         tanggalLahir: lahir,
-        kategori: kategori 
+        sifat: sifat, 
+        kategori: kategori,
+        favorit: isFavorit
     };
 
     if (editIndex === -1) {
@@ -137,6 +178,8 @@ function hasil(){
 
     modalElement.classList.remove("open");
     renderTabelTeman();
+    renderPrioritas();
+    updateDropdownTeman();
     document.getElementById("formulir-crud-teman").reset();
 }
 
@@ -147,7 +190,9 @@ function editData(index) {
     document.getElementById("nomorHp").value = item.hp;
     document.getElementById("kelamin").value = item.gender;
     document.getElementById("birth").value = item.tanggalLahir;
-    document.getElementById("pilih-kategori-teman").value = item.kategori;
+    document.getElementById("pilih-sifat-teman").value = item.sifat || ""; 
+    document.getElementById("pilih-kategori-teman").value = item.kategori || "";
+    document.getElementById("fav-cek").checked = item.favorit || false;
 
     editIndex = index;
     document.getElementById("modal").classList.add("open");
@@ -159,6 +204,8 @@ function hapusData(index) {
     if (konfirmasi) {
         data.splice(index, 1); 
         renderTabelTeman();    
+        renderPrioritas();
+        updateDropdownTeman();
     }
 }
 
@@ -185,10 +232,7 @@ function ambilKategori() {
         warnaKategori: warna
     });
 
-    // Update List Tampilan di halaman Kategori
     renderListKategori();
-    
-    // Update Dropdown di form teman & tugas
     updateDropdownKategori();
 
     inputKategori.value = "";
@@ -219,8 +263,8 @@ function updateDropdownKategori() {
     });
 }
 
-/* Logika Modal */
-function modal(){
+/* Logika Modal Teman */
+function initModalTeman(){
     const openBtn = document.getElementById("openModal");
     const closeBtn = document.getElementById("closeModal");
     const modal = document.getElementById("modal");
@@ -235,7 +279,7 @@ function modal(){
         modal.classList.remove("open");
     });
 }
-modal()
+initModalTeman();
 
 /* Logika buka whatsapp */
 function bukaWA(nomor) {
@@ -279,7 +323,6 @@ function ambilSifat(){
         warnaSifat: warna
     })
 
-    // Render List di halaman Sifat
     const dataSifatOutput = dataSifat.map((item) => `
     <div class="list-item" style="border-left: 5px solid ${item.warnaSifat};">
         <strong>${item.namaSifat}</strong><br>
@@ -288,7 +331,6 @@ function ambilSifat(){
     `).join('')
     outputHtml.innerHTML = dataSifatOutput;
 
-    // Update Dropdown Sifat di Form Teman
     updateDropdownSifat();
     alert(`Sifat '${sifat}' berhasil ditambahkan!`);
     
@@ -308,3 +350,121 @@ function updateDropdownSifat() {
         });
     }
 }
+
+/* =========================================
+   LOGIKA TUGAS DAN AGENDA (BARU)
+   ========================================= */
+
+function initModalTugas() {
+    const openBtn = document.getElementById("openModalTugas");
+    const closeBtn = document.getElementById("closeModalTugas");
+    const modalTugas = document.getElementById("modal-tugas");
+
+    openBtn.addEventListener("click", () => {
+        document.getElementById("formulir-tugas").reset();
+        modalTugas.classList.add("open");
+    });
+
+    closeBtn.addEventListener("click", () => {
+        modalTugas.classList.remove("open");
+    });
+}
+initModalTugas();
+
+function simpanTugas() {
+    const namaTugas = document.getElementById("nama-tugas").value.trim();
+    const descTugas = document.getElementById("desc-tugas").value;
+    const orangTugas = document.getElementById("tugas-orang").value;
+    const katTugas = document.getElementById("tugas-kategori").value;
+    const tenggatTugas = document.getElementById("tugas-tenggat").value;
+
+    if (namaTugas === "" || tenggatTugas === "") {
+        alert("Nama Kegiatan dan Tanggal/Tenggat Waktu wajib diisi!");
+        return;
+    }
+
+    dataTugas.push({
+        nama: namaTugas,
+        deskripsi: descTugas,
+        orang: orangTugas,
+        kategori: katTugas,
+        tenggat: tenggatTugas
+    });
+
+    alert(`Tugas / Agenda "${namaTugas}" berhasil disimpan!`);
+    
+    document.getElementById("modal-tugas").classList.remove("open");
+    document.getElementById("formulir-tugas").reset();
+
+    renderTugasHalaman();
+    renderTugasDashboard();
+}
+
+function renderTugasHalaman() {
+    const hasilTugas = document.getElementById("hasil-tugas");
+    
+    if (dataTugas.length === 0) {
+        hasilTugas.innerHTML = '<div style="text-align: center; padding: 30px; background: #fff; border-radius: 10px; color: #6b7280; font-size: 15px; border: 1px solid #e5e7eb;">Belum ada tugas atau agenda yang dibuat.</div>';
+        return;
+    }
+
+    const htmlTugas = dataTugas.map((t, index) => `
+        <div class="list-item" style="margin-bottom: 16px;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 10px;">
+                <div>
+                    <span class="tag-merah">Tenggat: ${t.tenggat}</span>
+                    <div class="item-header" style="margin-top: 8px;">
+                        <strong style="font-size: 17px;">${t.nama}</strong>
+                    </div>
+                    <div class="item-body" style="margin-top: 5px;">
+                        ${t.deskripsi ? `<p style="margin-bottom: 5px;">${t.deskripsi}</p>` : ''}
+                        <em style="color: #6b7280; font-size: 12px;">
+                            Bersama: ${t.orang || 'Sendiri'} | Kategori: ${t.kategori || '-'}
+                        </em>
+                    </div>
+                </div>
+                <button type="button" style="background:#ef4444; width: auto; padding: 8px 16px; font-size: 13px; border-radius: 6px; margin: 0;" onclick="hapusTugas(${index})">Tandai Selesai / Hapus</button>
+            </div>
+        </div>
+    `).join('');
+
+    hasilTugas.innerHTML = htmlTugas;
+}
+
+function renderTugasDashboard() {
+    const containerDash = document.getElementById("list-tugas-dashboard");
+    const totalTugasTeks = document.getElementById("total-tugas");
+
+    totalTugasTeks.textContent = dataTugas.length;
+
+    if (dataTugas.length === 0) {
+        containerDash.innerHTML = '<div style="text-align: center; padding: 20px; color: #6b7280; font-size: 14px;">Hore! Tidak ada tugas atau agenda tertunda.</div>';
+        return;
+    }
+
+    const htmlDash = dataTugas.map(t => `
+        <div class="list-item">
+            <span class="tag-merah">${t.tenggat}</span>
+            <div class="item-header" style="margin-top: 6px;">
+                <strong>${t.nama}</strong>
+            </div>
+            <div class="item-body">Bersama: ${t.orang || 'Sendiri'}</div>
+        </div>
+    `).join('');
+
+    containerDash.innerHTML = htmlDash;
+}
+
+function hapusTugas(index) {
+    const setuju = confirm("Apakah kamu yakin tugas/agenda ini sudah selesai atau ingin dihapus?");
+    if (setuju) {
+        dataTugas.splice(index, 1);
+        renderTugasHalaman();
+        renderTugasDashboard();
+    }
+}
+
+// Render awal untuk memunculkan status kosong
+renderPrioritas();
+renderTugasHalaman();
+renderTugasDashboard();
