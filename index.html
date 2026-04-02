@@ -12,7 +12,16 @@
 
     <nav class="navbar">
         <a href="#" class="logo-text">DB TEMAN</a>
-        <a href="app.html" class="btn-utama" style="padding: 10px 24px;">Login App</a>
+        <button id="hamburger-landing" class="hamburger-landing">
+            <svg viewBox="0 0 24 24" width="28" height="28" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+        </button>
+        <div class="nav-links" id="nav-links">
+            <a href="app.html" class="btn-utama" style="padding: 10px 24px;">Login App</a>
+        </div>
     </nav>
 
     <header class="hero">
@@ -75,6 +84,7 @@
     </footer>
 
     <script>
+        // Logika Reveal Animasi Scroll
         function reveal() {
             var reveals = document.querySelectorAll(".reveal");
             for (var i = 0; i < reveals.length; i++) {
@@ -88,6 +98,15 @@
         }
         window.addEventListener("scroll", reveal);
         reveal();
+
+        // Logika Hamburger Navbar Landing Page
+        const btnLanding = document.getElementById('hamburger-landing');
+        const navLinks = document.getElementById('nav-links');
+        if(btnLanding && navLinks) {
+            btnLanding.addEventListener('click', () => {
+                navLinks.classList.toggle('open');
+            });
+        }
     </script>
 </body>
 </html>
