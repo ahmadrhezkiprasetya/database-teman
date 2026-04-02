@@ -23,6 +23,7 @@ input[type="radio"] {
     justify-content: center;
     align-items: center;
     z-index: 999;
+    padding: 20px;
 }
 
 .box-login {
@@ -60,6 +61,8 @@ input[type="radio"] {
     top: 0;
     left: 0;
     box-shadow: 4px 0 15px rgba(0,0,0,0.05);
+    z-index: 999;
+    transition: transform 0.3s ease;
 }
 
 .logo {
@@ -99,6 +102,7 @@ input[type="radio"] {
     min-height: 100vh;
     position: relative;
     padding-bottom: 80px;
+    transition: margin-left 0.3s ease;
 }
 
 .topbar {
@@ -108,6 +112,27 @@ input[type="radio"] {
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.hamburger-btn {
+    display: none;
+    background: transparent;
+    border: none;
+    color: #111827;
+    padding: 5px;
+    cursor: pointer;
+    width: auto;
+}
+
+.hamburger-btn:hover {
+    background: transparent;
+    transform: scale(1.1);
 }
 
 .topbar h2 {
@@ -452,7 +477,7 @@ button:active {
     border-radius: 12px;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
     border: 1px solid #f3f4f6;
-    overflow: hidden;
+    overflow-x: auto;
     margin-top: 20px;
 }
 
@@ -460,6 +485,7 @@ table {
     width: 100%;
     border-collapse: collapse;
     text-align: left;
+    min-width: 800px;
 }
 
 th, td {
@@ -474,6 +500,7 @@ th {
     font-size: 13px;
     text-transform: uppercase;
     letter-spacing: 0.05em;
+    white-space: nowrap;
 }
 
 td {
@@ -491,60 +518,95 @@ td button {
     padding: 6px 14px;
     font-size: 12px;
     background: #10b981;
-    margin-left: 10px;
+    margin-left: 5px;
+    margin-bottom: 5px;
 }
 
 td button:hover {
     background: #059669;
 }
 
+#sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 998;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+/* KODE RESPONSIVE UNTUK DEVICE / HP */
+@media (max-width: 992px) {
+    .layout-grid {
+        flex-direction: column;
+    }
+}
+
 @media (max-width: 768px) {
+    .hamburger-btn {
+        display: block;
+    }
+
     #menu-kiri {
-        width: 100%;
-        height: auto;
-        position: relative;
+        transform: translateX(-100%);
     }
 
-    .logo {
-        padding: 20px;
+    #menu-kiri.open {
+        transform: translateX(0);
     }
 
-    #menu-kiri ul {
-        display: flex;
-        flex-wrap: nowrap;
-        overflow-x: auto;
-        margin: 0;
+    #sidebar-overlay {
+        display: block;
+        pointer-events: none;
     }
 
-    #menu-kiri ul li {
-        flex: 0 0 auto;
-    }
-
-    #menu-kiri ul li label {
-        border-left: none;
-        border-bottom: 3px solid transparent;
-        padding: 15px 20px;
-    }
-
-    #dashboard:checked ~ #layar-app #menu-kiri ul li:nth-child(1) label,
-    #sifat:checked ~ #layar-app #menu-kiri ul li:nth-child(2) label,
-    #kategori:checked ~ #layar-app #menu-kiri ul li:nth-child(3) label,
-    #teman:checked ~ #layar-app #menu-kiri ul li:nth-child(4) label,
-    #tugas:checked ~ #layar-app #menu-kiri ul li:nth-child(5) label {
-        border-bottom-color: #4f46e5;
+    #sidebar-overlay.open {
+        opacity: 1;
+        pointer-events: auto;
     }
 
     #area-utama {
         margin-left: 0;
     }
 
-    .flex-stat, .layout-grid, .form-row {
-        flex-direction: column;
-    }
-
     .topbar {
+        padding: 15px 20px;
         flex-direction: column;
         align-items: flex-start;
-        gap: 10px;
+        gap: 15px;
+    }
+
+    .info-waktu {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .konten-pembungkus {
+        padding: 20px;
+    }
+
+    .flex-stat {
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .form-row {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .header-aksi {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .btn-tambah {
+        width: 100%;
+    }
+    
+    .box-login {
+        padding: 30px 20px;
     }
 }
