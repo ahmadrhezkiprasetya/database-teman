@@ -40,7 +40,7 @@
                 <li><label for="sifat">Tipe Kepribadian</label></li>
                 <li><label for="kategori">Daftar Kategori</label></li>
                 <li><label for="teman">Data Teman</label></li>
-                <li><label for="tugas">Tugas Kategori</label></li>
+                <li><label for="tugas">Tugas & Agenda</label></li>
             </ul>
         </aside>
 
@@ -68,7 +68,7 @@
                         </div>
                         <div class="kartu-angka">
                             <span class="label-kecil">Tugas Tertunda</span>
-                            <div class="angka-gede">1</div>
+                            <div class="angka-gede" id="total-tugas">0</div>
                         </div>
                     </div>
 
@@ -76,34 +76,15 @@
                         <div class="grid-kiri">
                             <div class="papan">
                                 <h3>Daftar Kontak Prioritas</h3>
-                                <div class="list-data">
-                                    <div class="list-item">
-                                        <div class="item-header">
-                                            <strong>Rizky</strong> <span>(Laki-laki)</span>
-                                        </div>
-                                        <div class="item-body">Kategori: Sekolah | Sifat: Ambisius</div>
+                                <div class="list-data" id="list-prioritas">
                                     </div>
-                                    <div class="list-item">
-                                        <div class="item-header">
-                                            <strong>Siti</strong> <span>(Perempuan)</span>
-                                        </div>
-                                        <div class="item-body">Kategori: Rombel | Sifat: Humoris</div>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                         <div class="grid-kanan">
                             <div class="papan">
                                 <h3>Pengingat Tugas</h3>
-                                <div class="list-data">
-                                    <div class="list-item">
-                                        <span class="tag-merah">Mendesak</span>
-                                        <div class="item-header" style="margin-top: 5px;">
-                                            <strong>Kerja Kelompok Web</strong>
-                                        </div>
-                                        <div class="item-body">Deadline: 28 Maret 2026</div>
+                                <div class="list-data" id="list-tugas-dashboard">
                                     </div>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -222,32 +203,43 @@
                 </div>
 
                 <div class="halaman-box" id="hal-tugas">
-                    <div class="papan" style="max-width: 600px;">
-                        <h3>Buat Tugas Baru</h3>
-                        <form action="#">
-                            <label>Nama Kegiatan</label>
-                            <input type="text" placeholder="Contoh: Mengerjakan Project" required>
+                    <div class="header-aksi">
+                        <h3>Daftar Tugas & Agenda</h3>
+                        <button id="openModalTugas" class="btn-tambah">+ Buat Tugas Baru</button>
+                    </div>
 
-                            <label>Deskripsi</label>
-                            <textarea placeholder="Opsional" rows="2"></textarea>
+                    <div class="modal" id="modal-tugas">
+                        <div class="papan modal-create">
+                            <h3>Form Tugas Baru</h3>
+                            <form action="#" id="formulir-tugas">
+                                <label>Nama Kegiatan</label>
+                                <input type="text" id="nama-tugas" placeholder="Contoh: Mengerjakan Project, Nongkrong" required>
 
-                            <label>Orang yang terlibat</label>
-                            <select id="tugas-orang">
-                                <option>Endi</option>
-                                <option>Asep</option>
-                                <option>Rangga</option>
-                            </select>
+                                <label>Deskripsi (Opsional)</label>
+                                <textarea id="desc-tugas" placeholder="Detail kegiatan..." rows="2"></textarea>
 
-                            <label>Kategori Relasi</label>
-                            <select id="tugas-kategori">
-                                <option value="">-- Pilih Kategori --</option>
-                            </select>
+                                <label>Orang yang terlibat</label>
+                                <select id="tugas-orang">
+                                    <option value="">-- Pilih Orang --</option>
+                                </select>
 
-                            <label>Tenggat Waktu</label>
-                            <input type="date" required>
+                                <label>Kategori Relasi</label>
+                                <select id="tugas-kategori">
+                                    <option value="">-- Pilih Kategori --</option>
+                                </select>
 
-                            <button type="button">Buat Tugas</button>
-                        </form>
+                                <label>Tenggat Waktu / Tanggal Acara</label>
+                                <input type="date" id="tugas-tenggat" required>
+
+                                <button type="button" onclick="simpanTugas()">Simpan Tugas</button>
+                            </form>
+                            <button id="closeModalTugas" class="btn-tutup">Batal</button>
+                        </div>
+                    </div>
+
+                    <div class="papan" style="background: transparent; border: none; box-shadow: none; padding: 0;">
+                        <div id="hasil-tugas" class="list-data">
+                            </div>
                     </div>
                 </div>
 
